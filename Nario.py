@@ -1,10 +1,11 @@
+from random import sample
+
 #Definición árbol n-ario
 class Nario:
     def __init__(self,valor,hijos=[]):
         self.valor = valor
         self.hijos = hijos
 
-nodo= Nario(25,[Nario(22,[Nario(13),Nario(17)]),Nario(89)])
 #25
 #10 100
 #
@@ -36,13 +37,7 @@ def imp(arbol):
 1 y 0 0 0 0 1
 1 1 1 1 1 1 1
 """
-def impBakcTracking(arbol):
-    if len(arbol.hijos)==0:
-        return [[arbol.valor]]
-    if len(arbol.hijos)==1:
-        return [[arbol.valor]+impBakcTracking(arbol.hijos[0])]
-    if len(arbol.hijos)>1:
-        return [[arbol.valor]+impBakcTracking(arbol.hijos[0])]+ impBakcTracking(Nario(arbol.valor,arbol.hijos[1:]))
+
 def sumaPuntos(lista1,lista2):
     ##print (lista1 ,"  ")
     ##print (lista2 ,"\n")
@@ -80,17 +75,26 @@ def sumarCoordenada(coor1,coor2):
     return [coor1[0]+coor2[0],coor1[1]+coor2[1]]
 
 def armarNario(cabeza,mapa):
+    ##print(mapa)
     
-    if mapa[cabeza[0]][cabeza[1]]=='1' or mapa[cabeza[0]][cabeza[1]]=='x':
-        
-        return Nario(cabeza,[])
-    
-    return Nario(cabeza,[armarNario(sumarCoordenada(cabeza,[1,0]),modificarCoor(mapa, cabeza)),armarNario(sumarCoordenada(cabeza,[0,1]),modificarCoor(mapa, cabeza))])  
+    if mapa[cabeza[0]][cabeza[1]]=='1' or mapa[cabeza[0]][cabeza[1]]=='3'  :
+       ## print (mapa)
 
+        return Nario(cabeza,[])
+        
+    if mapa[cabeza[0]][cabeza[1]]=='x':
+        impMapa(mapa)
+      ##  print (mapa)
+        return Nario(cabeza,[])
+    ##impMapa(mapa)
+
+
+    return Nario(cabeza,[armarNario(sumarCoordenada(cabeza,[0,1]),modificarCoor(mapa, cabeza)),armarNario(sumarCoordenada(cabeza,[1,0]),modificarCoor(mapa, cabeza)) ,armarNario(sumarCoordenada(cabeza,[0,-1]),modificarCoor(mapa, cabeza)),armarNario(sumarCoordenada(cabeza,[-1,0]),modificarCoor(mapa, cabeza))  ])
+    
 def modificarCoor(mapa, coor):
   
     if coor[0]==0 and coor[1]==0:
-        return [[1]+mapa[0][1:]]+mapa[1:]
+        return [['3']+mapa[0][1:]]+mapa[1:]
     if coor[0]!=0:
         return [mapa[0]] + modificarCoor(mapa[1:],sumarCoordenada(coor, [-1,0]))
     return [[mapa[0][0]]+modificarCoor([mapa[0][1:]], sumarCoordenada(coor, [0,-1]))[0]] + mapa[1:]
@@ -108,14 +112,43 @@ def imprimirArbol(arbol):
         imprimirArbol(arbol[1:])
     
     
-        
-mapa=generarMap()
+def impMapa(mapa):
+    
+    for i in [0, 1, 2, 3 ,4,5]:
+        aux="";
+        for j in [0, 1, 2,3,4,5,6 ]:
+            aux+=" "+mapa[i][j]
+        print(aux)
+    print("---------------")
+
+def impBakcTracking(arbol):
+    if len(arbol.hijos)==0:
+        return [[arbol.valor]]
+    if len(arbol.hijos)==1:
+        return [[arbol.valor]+impBakcTracking(arbol.hijos[0])[0]]
+    if len(arbol.hijos)>1:
+        return [[arbol.valor]+impBakcTracking(arbol.hijos[0])[0]] +[[arbol.valor]+impBakcTracking(arbol.hijos[0])[1]] + impBakcTracking(Nario(arbol.valor,arbol.hijos[2:]))
+
+def conbinLineal(lista1,lista2):
+    return sample([(x,y) for x in [['A']] for y in [['picas','treboles'],['corazones','diamantes']]],2)
+
+##  [[25+
+                 
+##mapa=generarMap()
+nodo1= Nario(25,[Nario(22,[Nario(13),Nario(17)]),Nario(89)])
+nodo= Nario(25, [Nario(18,[]),Nario(30,[])])
+
+print(conbinLineal([0,1,2],[3,4,5]))
+##print(impBakcTracking(nodo1))
+##impMapa(modificarCoor(mapa,[0,0]))
+
+##armarNario(buscarY(mapa), mapa)
 ##print(mapa)
 ##print(mostrarCoordenada(mapa,[2,2]))
 ##print(buscarY(mapa))
 ##print(modificarCoor( mapa,[4,4-3]))
 ##imprimirArbol([armarNario(buscarY(mapa), mapa)])
 ##print(imp(armarNario(buscarY(mapa), mapa)))
-print (impBakcTracking(nodo))
+##print (impBakcTracking(nodo1))
 ##print(posX(mapa))
 ##print(sumarCoordenada([1,0],[0,1]))
